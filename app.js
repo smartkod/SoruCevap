@@ -1,26 +1,38 @@
-const express = require('express')
-const app = express()
-const {engine} = require('express-handlebars')
-const {join} = require('path')
-require('dotenv').config()
+const express = require('express');
+const { engine } = require('express-handlebars');
+const { join } = require('path');
+require('dotenv').config();
 
-//! Varibles and arrays
-let PORT = process.env.PORT || 3000
-
+const app = express();
+let PORT = process.env.PORT || 3000;
 
 //! Template engine
-app.engine('handlebars', engine())
-app.set('view engine', 'handlebars')
-app.set('views', join(__dirname, 'views'))
+app.engine('handlebars', engine());
+app.set('view engine', 'handlebars');
+app.set('views', join(__dirname, 'views'));
 
 //! Middleware
-app.use(express.static(join(__dirname, 'public')))
+app.use(express.static(join(__dirname, 'public')));
 
 //! Routes
-app.get('/', (req, res)=>{
-    res.render('site/index')
-})
+app.get('/', (req, res) => {
+  res.render('site/index');
+});
 
-app.listen(PORT, ()=>{
-    console.log(`Server is running http://127.0.0.1:${PORT}`)
-})
+//! Dinamik port kontrolü
+function startServer(port) {
+  const server = app.listen(port, () => {
+    console.log(`✅ Server is running at http://127.0.0.1:${port}`);
+  });
+
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      console.warn(`⚠️  Port ${port} is in use, trying ${port + 1}...`);
+      startServer(port + 1);
+    } else {
+      console.error(err);
+    }
+  });
+}
+
+startServer(PORT);
