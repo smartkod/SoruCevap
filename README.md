@@ -1,6 +1,6 @@
 # tryProject
 
-- Youtube videosu ile birlikte oluşturulan bir projedir.
+.
 - Amacı render.com üzerinde ücretsiz deployment işlemini göstermektir.
 
 - It is a project created with a YouTube video.
